@@ -4,110 +4,104 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Modal from "@mui/material/Modal";
 import { Header } from "../../components/Header";
-import   CreateNewAccountForm from "../ContactsTable/CreateNewAccountForm.jsx";
+import CreateNewAccountForm from "../ContactsTable/CreateNewAccountForm.jsx";
+import Select from "react-select"; 
 import "./task.css";
 import "./TaskTable.jsx";
 
+const Form4 = () => {
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    pt: 2,
+    px: 4,
+    pb: 3,
+  };
 
-const Form4=()=>{
-    const style = {
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        width: 400,
-        bgcolor: "background.paper",
-        border: "2px solid #000",
-        boxShadow: 24,
-        pt: 2,
-        px: 4,
-        pb: 3,
-      };
-
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const [taskdata, setTaskData] = useState({
+    subject: "",
+    due_date: "",
+    status: "",
+    priority: "",
+    description: "",
+    contact: null,
+    account: "",
+    createdBy: "",
+  });
 
-  const[taskdata,setTaskData]=useState({
-
-
-        subject:"",
-        due_date:"",
-        status: "",
-        priority: "", 
-        description: "",
-        contact: null,
-        account: "",
-        createdBy: "",
-
-  })
   const [accountOptions, setAccountOptions] = useState([]);
-  const [filteredOptions, setFilteredOptions] = useState(accountOptions);
+  const [filteredOptions, setFilteredOptions] = useState([]);
 
-  const [showCreateNewAccountForm, setShowCreateNewAccountForm] =
-    useState(false);
-    useEffect(() => {
-        fetchAccountOptions();
-      }, []);
+  useEffect(() => {
+    fetchAccountOptions();
+  }, []);
 
-    const fetchAccountOptions = async () => {
-        try {
-          const response = await axios.get(
-            "https://backendcrmnurenai.azurewebsites.net/accounts/"
-          );
-          console.log("Account options response:", response.data);
-    
-          setAccountOptions(response.data);
-          setFilteredOptions(response.data);
-        } catch (error) {
-          console.error("Error fetching account options:", error);
-        }
-      };
-      const handleChange = (event) => {
-        const { name, value } = event.target;
-        if (name === 'contacts') {
-          const contactsArray = value.split(',').map((item) => item.trim());
-          setTaskData({
-            ...taskdata,
-            [name]: contactsArray,
-          });
-        } else {
-          setTaskData({
-            ...taskdata,
-            [name]: value,
-          });
-        }
-      };
-      const handleSubmit = async (event) => {
-        event.preventDefault();
-        try {
-          const response = await axios.post(
-            "https://backendcrmnurenai.azurewebsites.net/tasks/",
-            taskdata
-          );
-          console.log("Form submitted successfully:", response.data);
-          setTaskData({
-            subject:"",
-        due_date:"",
+  const fetchAccountOptions = async () => {
+    try {
+      const response = await axios.get(
+        "https://backendcrmnurenai.azurewebsites.net/accounts/"
+      );
+      console.log("Account options response:", response.data);
+      setAccountOptions(response.data);
+      setFilteredOptions(response.data);
+    } catch (error) {
+      console.error("Error fetching account options:", error);
+    }
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setContactData({
+      ...contactData,
+      [name]: value,
+    });
+    if (name === "name") {
+      const filtered = accountOptions.filter((option) =>
+        option.Name.toUpperCase().startsWith(value.toUpperCase())
+      );
+      setFilteredOptions(filtered);
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(
+        "https://backendcrmnurenai.azurewebsites.net/tasks/",
+        taskdata
+      );
+      console.log("Form submitted successfully:", response.data);
+      setTaskData({
+        subject: "",
+        due_date: "",
         status: "",
-        priority: "", 
+        priority: "",
         description: "",
         contact: null,
         account: "",
         createdBy: "",
-          });
-        } catch (error) {
-          console.error("Error submitting form:", error);
-        }
-      };
-      return(
-        <div>
-             {showCreateNewAccountForm && <CreateNewAccountForm />}
-             <Header name="Task Information" />
-             <form onSubmit={handleSubmit}>
-            <div className="form-row">
-              <div className="form-group col-md-6">
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
+  return (
+    <div>
+      <Header name="Task Information" />
+      <form onSubmit={handleSubmit}>
+        <div className="form-row">
+        <div className="form-group col-md-6">
                 <label htmlFor="subject">subject</label>
                 <input
                   type="text"
@@ -191,61 +185,49 @@ const Form4=()=>{
                   placeholder="Enter created By"
                 />
               </div>
-              <div className="form-group col-md-6">
-                <label htmlFor="name">Account</label>
-                <select
-                  id="name"
-                  name="name"
-                  value={taskdata.name}
-                  onChange={(event) => {
-                    setTaskData({ ...oppourtunityData, name: event.target.value });
-                    if (event.target.value === "create-new-account") {
-                      handleOpen(); 
-                    }
-                  }}
-                
-                  className="form-control"
-                >
-                  <option value="">Select Account</option>
-                  {filteredOptions.map((option) => (
-                    <option key={option.id} value={option.Name}>
-                      {option.Name}
-                    </option>
-                  ))}
-                   <option value="create-new-account">Create New Account</option>
-    
-                </select>
-    
-    
-                <Modal
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={style}>
-                    <CreateNewAccountForm />
-                  </Box>
-                </Modal>
-              </div>
-
-
-              </div>
-              <div className="submit">
-              <button type="submit" className="btn btn-primary">
-                Save
-              </button>
-            </div>
-            </form>
 
 
 
+         
+          <div className="form-group col-md-6">
+            <label htmlFor="account">Account</label>
+            <Select
+              options={[
+                ...filteredOptions.map((option) => ({
+                  value: option.Name,
+                  label: option.Name,
+                })),
+                { value: "create-new-account", label: "Create New Account" },
+              ]}
+              onChange={handleChange}
+              styles={{
+                option: (provided, state) => ({
+                  ...provided,
+                  backgroundColor: state.data && state.data.value === "create-new-account" ? "lightblue" : "white",
+                  color: state.data && state.data.value === "create-new-account" ? "black" : "black",
+                }),
+              }}
+            />
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
+                <CreateNewAccountForm />
+              </Box>
+            </Modal>
+          </div>
         </div>
-
-
-      )
-
-
-}
+        <div className="submit">
+          <button type="submit" className="btn btn-primary">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
 
 export default Form4;

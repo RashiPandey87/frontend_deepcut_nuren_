@@ -4,6 +4,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Header } from "../../components/Header";
 import CreateNewAccountForm from "./CreateNewAccountForm";
+import Select from "react-select"; 
 
 import "./contactsTable.css";
 
@@ -78,19 +79,31 @@ function Form2() {
   const [showCreateNewAccountForm, setShowCreateNewAccountForm] =
     useState(false);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setContactData({
-      ...contactData,
-      [name]: value,
-    });
-    if (name === "name") {
-      const filtered = accountOptions.filter((option) =>
-        option.Name.toUpperCase().startsWith(value.toUpperCase())
-      );
-      setFilteredOptions(filtered);
-    }
-  };
+    const handleChange = (event) => {
+      if (event && event.target) {
+        const { name, value } = event.target;
+        setContactData({
+          ...contactData,
+          [name]: value,
+        });
+        if (name === "name") {
+          const filtered = accountOptions.filter((option) =>
+            option.Name.toUpperCase().startsWith(value.toUpperCase())
+          );
+          setFilteredOptions(filtered);
+        }
+      } else {
+        // Handle changes from Select component
+        setContactData({
+          ...contactData,
+          account: event.value,
+        });
+        if (event.value === "create-new-account") {
+          handleOpen();
+        }
+      }
+    };
+    
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -132,42 +145,9 @@ function Form2() {
       console.error("Error submitting form:", error);
     }
   };
-  const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-    if (searchTerm === "") {
-      setFilteredOptions(contacts);
-    } else {
-      setFilteredOptions(
-        contacts.filter((contact) =>
-          contact.Name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
-    }
-  };
-  const handleFilterChange = (event) => {
-    const filterBy = event.target.value;
-    if (filterBy === "Name") {
-      setFilteredOptions(
-        contacts
-          .slice()
-          .sort((a, b) =>
-            a.Name.toLowerCase() > b.Name.toLowerCase() ? 1 : -1
-          )
-      );
-    } else if (filterBy === "createdBy") {
-      setFilteredOptions(
-        contacts.filter((contact) =>
-          contact.createdBy
-            .toLowerCase()
-            .includes(event.target.value.toLowerCase())
-        )
-      );
-    } else {
-      setFilteredOptions(contacts);
-    }
-  };
+ 
+
 
   return (
     <div>
@@ -226,42 +206,36 @@ function Form2() {
             />
           </div>
           <div className="form-group col-md-6">
-                <label htmlFor="Account Type">Account</label>
-                <select
-                  id="name"
-                  name="searchTerm"
-                  value={contactData.name}
-                  onChange={(event) => {
-                    setContactData({ ...contactData, name: event.target.value });
-                    if (event.target.value === "create-new-account") {
-                      handleOpen(); 
-                    }
-                  }}
-                
-                  className="form-control"
-                >
-                  <option value="">Select Account</option>
-                  {filteredOptions.map((option) => (
-                    <option key={option.id} value={option.Name}>
-                      {option.Name}
-                    </option>
-                  ))}
-                   <option value="create-new-account">Create New Account</option>
-    
-                </select>
-    
-    
-                <Modal
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={style}>
-                    <CreateNewAccountForm />
-                  </Box>
-                </Modal>
-              </div>
+            <label htmlFor="account">Account</label>
+            <Select
+              options={[
+                ...filteredOptions.map((option) => ({
+                  value: option.Name,
+                  label: option.Name,
+                })),
+              
+                { value: "create-new-account", label: "Create New Account" },
+              ]}
+              onChange={handleChange}
+              styles={{
+                option: (provided, state) => ({
+                  ...provided,
+                  backgroundColor: state.data && state.data.value === "create-new-account" ? "lightblue" : "white",
+                  color: state.data && state.data.value === "create-new-account" ? "black" : "black",
+                }),
+              }}
+            />
+            <Modal
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
+                <CreateNewAccountForm />
+              </Box>
+            </Modal>
+          </div>
           <div className="form-group col-md-6">
             <label htmlFor="phone">Phone</label>
             <input
