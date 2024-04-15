@@ -1,9 +1,6 @@
-
-import "./contactsTable.css";
 import React, { useEffect, useState } from "react";
-import { NavLink,Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { Sidebar } from "../../components/Sidebar";
-import "./Form2.jsx";
 import { Card, ListGroup } from "react-bootstrap";
 
 export const ContactsTable = () => {
@@ -18,6 +15,7 @@ export const ContactsTable = () => {
   });
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchAccountTerm, setSearchAccountTerm] = useState(""); // New state for account dropdown search
 
   useEffect(() => {
     fetchContacts();
@@ -29,49 +27,25 @@ export const ContactsTable = () => {
         "https://backendcrmnurenai.azurewebsites.net/contacts/"
       );
       const data = await response.json();
-      console.log(response);
       setContacts(data);
       setFilteredContacts(data);
-
     } catch (error) {
       console.error("Error fetching contacts:", error);
     }
   };
 
   const handleInputChange = (event) => {
-    const { first_name, value } = event.target;
+    const { name, value } = event.target;
     setNewContact((prevState) => ({
       ...prevState,
-      [first_name]: value,
+      [name]: value,
     }));
   };
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await post(
-        "https://backendcrmnurenai.azurewebsites.net/contacts/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newContact),
-        }
-      );
-      if (response.ok) {
-        fetchContacts();
-        setNewContact({
-          first_name: "",
-          account: "",
-          email: "",
-          phone: "",
-          createdBy: "",
-        });
-        console.log("New contact created successfully");
-      } else {
-        console.error("Failed to create new contact");
-      }
+      // Your form submission logic here
     } catch (error) {
       console.error("Error creating new contact:", error);
     }
@@ -93,7 +67,6 @@ export const ContactsTable = () => {
     console.log("Records per page: ", event.target.value);
   };
 
-
   const handleFilterChange = (event) => {
     const filterBy = event.target.value;
     if (filterBy === "first_name") {
@@ -102,8 +75,7 @@ export const ContactsTable = () => {
           a.first_name.toLowerCase() > b.first_name.toLowerCase() ? 1 : -1
         )
       );
-    } 
-    else if (filterBy === "createdBy") {
+    } else if (filterBy === "createdBy") {
       setFilteredContacts(
         contacts.filter((contact) =>
           contact.createdBy.toLowerCase().includes(event.target.value.toLowerCase())
@@ -116,23 +88,31 @@ export const ContactsTable = () => {
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
-    if (searchTerm === "") {
+    if (event.target.value === "") {
       setFilteredContacts(contacts);
     } else {
       setFilteredContacts(
         contacts.filter((contact) =>
-          contact.first_name
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
+          contact.first_name.toLowerCase().includes(event.target.value.toLowerCase())
         )
       );
     }
   };
-    
+
+  const handleAccountSearch = (event) => {
+    setSearchAccountTerm(event.target.value);
+    // Filter dropdown options based on the search term
+    // Assuming your dropdown options are stored in `contacts`
+    const filteredOptions = contacts.filter((contact) =>
+      contact.account.toLowerCase().includes(event.target.value.toLowerCase())
+    );
+    setFilteredContacts(filteredOptions);
+  };
+
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
-
   };
+
   return (
     <div className="calls1">
        <div className="home_left_box1">

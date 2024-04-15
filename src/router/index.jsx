@@ -22,7 +22,8 @@ import AccountsPage from "../pages/AccountsPage/AccountPage";
 import CreateLead from "../pages/Lead/CreateLead";
 
 import AccountForm from "../pages/AccountsSection/AccountForm";
-import TaskTable from "../pages/TasksSection/TaskTable";
+import TaskTable from "../pages/Tasks/TaskTable";
+
 
 
 import ConvertLead from "../pages/Lead/ConvertLead";
@@ -33,6 +34,7 @@ import ConvertLead from "../pages/Lead/ConvertLead";
 import { useAuth } from "../authContext";
 import { useState } from "react";
 import Form3 from "../pages/opportunities/Form3";
+import Form4 from "../pages/Tasks/Form4";
 
 
 export const RouteWrapper = () => {
@@ -94,6 +96,7 @@ export const RouteWrapper = () => {
       <Route path="*" element={<NotFound />} />
       <Route path="/accounts/:id" element={<AccountsPage />} />
       <Route path="/tasks" element={<TaskTable/>} />
+      <Route path="/addtask" element={<Form4/>}/>
       <Route path="/email" element={<MassEmail/>} />
 
       <Route path="*" element={<NotFound />} />

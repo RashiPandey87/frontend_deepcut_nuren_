@@ -45,6 +45,7 @@ const Form3=() =>{
     isActive:"",
 
   });
+  
   const leadSourceOptions = [
     { id: 1, value: "NONE", label: "NONE" },
     { id: 2, value: "CALL", label: "CALL" },
@@ -234,7 +235,7 @@ const Form3=() =>{
                 <label htmlFor="name">Account</label>
                 <select
                   id="name"
-                  name="name"
+                  name="searchTerm"
                   value={oppourtunityData.name}
                   onChange={(event) => {
                     setOppourtunityData({ ...oppourtunityData, name: event.target.value });
