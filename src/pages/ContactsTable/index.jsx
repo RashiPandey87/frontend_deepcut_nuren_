@@ -92,7 +92,7 @@ export const ContactsTable = () => {
   const handleRecords1 = (event) => {
     console.log("Records per page: ", event.target.value);
   };
-<<<<<<< HEAD
+
 
   const handleFilterChange = (event) => {
     const filterBy = event.target.value;
@@ -127,24 +127,24 @@ export const ContactsTable = () => {
         )
       );
     }
-=======
+  };
+    
   const handleViewModeChange = (mode) => {
     setViewMode(mode);
->>>>>>> 4f50e854805a381549214627748f35e1ee0a9d08
+
   };
   return (
     <div className="calls1">
-      <div className="home_left_box1">
+       <div className="home_left_box1">
         <Sidebar />
       </div>
-<<<<<<< HEAD
+
       <div >
 
       </div>
       <div className="contain1">
-=======
+
       <div className="contain1" style={{width:"100%"}}>
->>>>>>> 4f50e854805a381549214627748f35e1ee0a9d08
         <div className="meet1">
           <div className="Addcalls1">
             <select className="view-mode-select" onChange={handleAllCalls1}>
@@ -236,14 +236,12 @@ export const ContactsTable = () => {
             <table>
               <thead>
                 <tr>
-<<<<<<< HEAD
                   <th>name</th>
                   
                   <th>Account Name</th>
-=======
+
                   <th>Contact Name</th>
                   <th>Description</th>
->>>>>>> 4f50e854805a381549214627748f35e1ee0a9d08
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Address</th>
@@ -317,5 +315,7 @@ export const ContactsTable = () => {
         </div>
       </div>
     </div>
-  );
-};
+  
+      </div>
+     );
+    }
