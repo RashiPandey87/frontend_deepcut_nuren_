@@ -53,7 +53,7 @@ const ContactInfo = () => {
     CreatedDate: "",
     createdBy: "",
   });
-  const { id } = useParams(); // Get the account ID from the URL parameter
+  const { id } = useParams(); 
 
   const [meetings, setMeetings] = useState([]);
   // const [modalOpen1, setModalOpen1] = useState(false);

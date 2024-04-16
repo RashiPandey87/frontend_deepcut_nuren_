@@ -35,6 +35,7 @@ import { useAuth } from "../authContext";
 import { useState } from "react";
 import Form3 from "../pages/opportunities/Form3";
 import Form4 from "../pages/Tasks/Form4";
+import AddTask from "../pages/Tasks/AddTask";
 
 
 export const RouteWrapper = () => {
@@ -95,6 +96,7 @@ export const RouteWrapper = () => {
       <Route path="/callpage" element={<CallPage/>}/>
       <Route path="*" element={<NotFound />} />
       <Route path="/accounts/:id" element={<AccountsPage />} />
+      <Route path="/tasks/:id" element={<AddTask/>}/>
       <Route path="/tasks" element={<TaskTable/>} />
       <Route path="/addtask" element={<Form4/>}/>
       <Route path="/email" element={<MassEmail/>} />
