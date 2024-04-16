@@ -22,7 +22,7 @@ import AccountsPage from "../pages/AccountsPage/AccountPage";
 import CreateLead from "../pages/Lead/CreateLead";
 
 import AccountForm from "../pages/AccountsSection/AccountForm";
-import TaskTable from "../pages/Tasks/TaskTable";
+import TaskTable from "../pages/TasksSection/TaskTable";
 
 
 
@@ -34,8 +34,8 @@ import ConvertLead from "../pages/Lead/ConvertLead";
 import { useAuth } from "../authContext";
 import { useState } from "react";
 import Form3 from "../pages/opportunities/Form3";
-import Form4 from "../pages/Tasks/Form4";
-import AddTask from "../pages/Tasks/AddTask";
+import Form4 from "../pages/TasksSection/Form4";
+import AddTask from "../pages/TasksSection/AddTask";
 
 
 export const RouteWrapper = () => {
